@@ -181,6 +181,8 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;defaultOpen&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;목록&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;comfortable&quot;,&quot;compact&quot;],&quot;default&quot;:&quot;comfortable&quot;,&quot;tsType&quot;:&quot;'comfortable' | 'compact'&quot;,&quot;section&quot;:&quot;목록&quot;},&quot;showSource&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;목록&quot;}}">
+const ETC = '기타';
+
 class Component extends DCLogic {
   state = { data: [], q: '', grp: '전체', cat: '전체', sub: '전체', open: {} };
   searchRef = React.createRef();
@@ -235,6 +237,21 @@ class Component extends DCLogic {
     return base + s + (zero && !on ? 'opacity:.4;' : '');
   }
 
+  // 소분류를 건수 기준으로 정리: 3건 이상은 그대로, 1~2건은 '기타'로 병합.
+  // 정렬·병합 기준은 검색과 무관하게 전체 데이터 기준이라 입력 중에도 칩 순서가 흔들리지 않는다.
+  subMeta() {
+    if (this._subMetaFor !== this.state.data) {
+      const base = {};
+      this.state.data.forEach(d => { base[d.sub] = (base[d.sub] || 0) + 1; });
+      const small = new Set(Object.keys(base).filter(k => base[k] <= 2));
+      const big = Object.keys(base).filter(k => !small.has(k))
+        .sort((a, b) => base[b] - base[a] || a.localeCompare(b, 'ko'));
+      this._subMeta = { base, small, big };
+      this._subMetaFor = this.state.data;
+    }
+    return this._subMeta;
+  }
+
   toggleKey(k) { this.setState(s => ({ open: { ...s.open, [k]: !(s.open[k] ?? (this.props.defaultOpen ?? true)) } })); }
 
   card(d, T, withSnip, compact) {
@@ -243,14 +260,14 @@ class Component extends DCLogic {
     return {
       key, num: (d.grp === '정시' ? '정' : '수') + d.n, grp: d.grp, isJs: d.grp === '정시', isSs: d.grp !== '정시',
       cat: d.cat, sub: d.sub, tel: d.tel, src: d.src, open,
-      showGrp: false, showCat: false, showSub: this.state.sub === '전체',
+      showGrp: false, showCat: false, showSub: this.state.sub === '전체' || this.state.sub === ETC,
       pickCat: e => { e.stopPropagation(); this.setState({ grp: d.grp, cat: d.cat, sub: '전체' }); window.scrollTo({ top: 0, behavior: 'smooth' }); },
       qParts: this.parts(d.q, T), aParts: this.parts(d.a, T), hasSnip: !!sn, snipParts: this.parts(sn, T),
       cardStyle: 'background:var(--gray-0);border:1px solid ' + (open ? 'var(--green-300)' : 'var(--gray-200)') + ';border-radius:12px;overflow:hidden;box-shadow:' + (open ? 'var(--shadow-md)' : 'none') + ';transition:box-shadow .13s ease,border-color .13s ease;',
       rowStyle: 'display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:' + (compact ? '10px 16px' : '14px 20px') + ';',
       arrowStyle: 'flex:0 0 auto;color:var(--gray-400);padding-top:4px;transition:transform .13s ease;transform:rotate(' + (open ? 90 : 0) + 'deg);',
       toggle: () => this.toggleKey(key),
-      pickSub: e => { e.stopPropagation(); this.setState({ sub: d.sub }); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+      pickSub: e => { e.stopPropagation(); this.setState({ sub: this.subMeta().small.has(d.sub) ? ETC : d.sub }); window.scrollTo({ top: 0, behavior: 'smooth' }); },
     };
   }
 
@@ -272,14 +289,17 @@ class Component extends DCLogic {
       return { label: c, count: n, style: this.chipStyle(c === cat, n === 0, c === '전체' ? 'grp' : 'cat'), pick: () => this.setState({ cat: c, sub: '전체' }) };
     });
     const poolS = data.filter(d => this.matchQ(d, T));
-    const subNames = [...new Set(data.map(d => d.sub))];
+    const { small, big } = this.subMeta();
     const showSubs = true;
-    const subs = ['전체', ...subNames].map(s => {
-      const n = s === '전체' ? poolS.length : poolS.filter(d => d.sub === s).length;
+    const subs = ['전체', ...big, ...(small.size ? [ETC] : [])].map(s => {
+      const n = s === '전체' ? poolS.length
+        : s === ETC ? poolS.filter(d => small.has(d.sub)).length
+        : poolS.filter(d => d.sub === s).length;
       return { label: s, count: n, style: this.chipStyle(s === sub, n === 0, s === '전체' ? 'grp' : 'cat'), pick: () => this.setState({ sub: s }) };
     });
 
-    const res = data.filter(d => inGrp(d) && inCat(d) && (sub === '전체' || d.sub === sub) && this.matchQ(d, T));
+    const inSub = d => sub === '전체' || (sub === ETC ? small.has(d.sub) : d.sub === sub);
+    const res = data.filter(d => inGrp(d) && inCat(d) && inSub(d) && this.matchQ(d, T));
     const A = res.filter(d => this.hitTitle(d, T)), B = res.filter(d => !this.hitTitle(d, T));
     const setAll = v => { const o = {}; res.forEach(d => { o[d.grp + d.n] = v; }); this.setState(s => ({ open: { ...s.open, ...o } })); };
 
