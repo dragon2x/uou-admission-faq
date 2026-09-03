@@ -52,6 +52,15 @@
 
       <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:16px">
         <div style="display:flex;align-items:flex-start;gap:12px">
+          <span style="flex:0 0 40px;font-size:15px;color:var(--gray-500);padding-top:7px">구분</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+              <button onClick="{{ g.pick }}" style="{{ g.style }}">{{ g.label }} <span style="opacity:.6;font-variant-numeric:tabular-nums">{{ g.count }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;align-items:flex-start;gap:12px">
           <span style="flex:0 0 40px;font-size:15px;color:var(--gray-500);padding-top:7px">분류</span>
           <div style="display:flex;flex-wrap:wrap;gap:6px">
             <sc-for list="{{ subs }}" as="c" hint-placeholder-count="12">
@@ -240,14 +249,22 @@ class Component extends DCLogic {
   // 소분류를 건수 기준으로 정리: 3건 이상은 그대로, 1~2건은 '기타'로 병합.
   // 정렬·병합 기준은 검색과 무관하게 전체 데이터 기준이라 입력 중에도 칩 순서가 흔들리지 않는다.
   subMeta() {
-    if (this._subMetaFor !== this.state.data) {
+    const key = JSON.stringify([this.state.data.length, this.state.grp, this.state.sub]);
+    if (this._subMetaFor !== key) {
       const base = {};
       this.state.data.forEach(d => { base[d.sub] = (base[d.sub] || 0) + 1; });
+      // 병합 판정은 항상 전체 기준. 구분마다 다시 계산하면 정시(29건)에서
+      // 대부분이 1~2건이 되어 '기타'가 목록을 통째로 삼킨다.
       const small = new Set(Object.keys(base).filter(k => base[k] <= 2));
-      const big = Object.keys(base).filter(k => !small.has(k))
-        .sort((a, b) => base[b] - base[a] || a.localeCompare(b, 'ko'));
-      this._subMeta = { base, small, big };
-      this._subMetaFor = this.state.data;
+      const inG = this.state.grp === '전체' ? this.state.data : this.state.data.filter(d => d.grp === this.state.grp);
+      const cur = {};
+      inG.forEach(d => { cur[d.sub] = (cur[d.sub] || 0) + 1; });
+      // 정렬·노출은 선택된 구분 기준. 검색어는 반영하지 않아 타이핑 중 순서가 흔들리지 않는다.
+      const big = Object.keys(base).filter(k => !small.has(k) && (cur[k] || k === this.state.sub))
+        .sort((a, b) => (cur[b] || 0) - (cur[a] || 0) || a.localeCompare(b, 'ko'));
+      const hasEtc = inG.some(d => small.has(d.sub)) || this.state.sub === ETC;
+      this._subMeta = { base, small, big, hasEtc };
+      this._subMetaFor = key;
     }
     return this._subMeta;
   }
@@ -275,7 +292,7 @@ class Component extends DCLogic {
     const { data, q, grp, cat, sub } = this.state;
     const T = this.toks();
     const compact = (this.props.density ?? 'comfortable') === 'compact';
-    const inGrp = () => true;
+    const inGrp = d => grp === '전체' || d.grp === grp;
     const inCat = () => true;
 
     const poolG = data.filter(d => this.matchQ(d, T));
@@ -288,10 +305,10 @@ class Component extends DCLogic {
       const n = c === '전체' ? poolC.length : poolC.filter(d => d.cat === c).length;
       return { label: c, count: n, style: this.chipStyle(c === cat, n === 0, c === '전체' ? 'grp' : 'cat'), pick: () => this.setState({ cat: c, sub: '전체' }) };
     });
-    const poolS = data.filter(d => this.matchQ(d, T));
-    const { small, big } = this.subMeta();
+    const poolS = data.filter(d => inGrp(d) && this.matchQ(d, T));
+    const { small, big, hasEtc } = this.subMeta();
     const showSubs = true;
-    const subs = ['전체', ...big, ...(small.size ? [ETC] : [])].map(s => {
+    const subs = ['전체', ...big, ...(hasEtc ? [ETC] : [])].map(s => {
       const n = s === '전체' ? poolS.length
         : s === ETC ? poolS.filter(d => small.has(d.sub)).length
         : poolS.filter(d => d.sub === s).length;
