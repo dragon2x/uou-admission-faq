@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>울산대학교 입학 FAQ — 전화 상담용</title>
+  <link rel="stylesheet" href="_ds/uou-design-system-08270e3c-2041-4ffa-a702-d6dda8498903/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/uou-design-system-08270e3c-2041-4ffa-a702-d6dda8498903/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/uou-design-system-08270e3c-2041-4ffa-a702-d6dda8498903/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/uou-design-system-08270e3c-2041-4ffa-a702-d6dda8498903/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/uou-design-system-08270e3c-2041-4ffa-a702-d6dda8498903/tokens/mascot.css">
+  <link rel="stylesheet" href="_ds/uou-design-system-08270e3c-2041-4ffa-a702-d6dda8498903/tokens/base.css">
+  <link rel="stylesheet" href="_ds/uou-design-system-08270e3c-2041-4ffa-a702-d6dda8498903/styles.css">
+  <script src="_ds/uou-design-system-08270e3c-2041-4ffa-a702-d6dda8498903/_ds_bundle.js"></script>
+  <style>
+    body{margin:0;background:var(--gray-0);color:var(--gray-800);font-family:var(--font-sans,'Pretendard',sans-serif);-webkit-font-smoothing:antialiased}
+    a{color:var(--link-color)}a:hover{color:var(--link-hover)}
+    @media print{[data-noprint]{display:none !important}[data-sticky]{position:static !important}[data-card]{break-inside:avoid}}
+  </style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <header data-sticky="1" style="position:sticky;top:0;z-index:50;background:var(--gray-0);border-bottom:1px solid var(--gray-200)">
+    <div style="max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px">
+      <img src="assets/logomark-solid.png" alt="울산대학교" style="height:32px;width:auto;display:block">
+      <div style="display:flex;flex-direction:column;gap:2px;min-width:0">
+        <div style="font-size:20px;font-weight:700;color:var(--gray-900);letter-spacing:-0.2px">입학 자주 묻는 질문 (FAQ)</div>
+        <div style="font-size:15px;color:var(--gray-500)">전화 상담용 · 온라인 QnA 952건(2025.5~2026.8) 기반 · 2027학년도 수시 모집요강 대조 반영</div>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:15px;color:var(--gray-500);white-space:nowrap" data-noprint="1">
+        <span>입학관리팀</span><span style="font-weight:700;color:var(--green-700);font-variant-numeric:tabular-nums">052-259-2058~9</span>
+      </div>
+    </div>
+  </header>
+
+  <section data-noprint="1" style="background:var(--gray-50);border-bottom:1px solid var(--gray-200)">
+    <div style="max-width:1200px;margin:0 auto;padding:20px 24px 0;display:flex;flex-direction:column;gap:14px">
+      <div ref="{{ searchRef }}" style="display:flex;gap:8px;align-items:center">
+        <div style="flex:1;position:relative">
+          <x-import component-from-global-scope="UOUDesignSystem_08270e.Input" size="lg" value="{{ q }}" on-change="{{ onQ }}" placeholder="키워드로 검색 (예: 진로선택, 수능최저, 검정고시, 등록취소, 기숙사, 이월)" hint-size="100%,52px"></x-import>
+          <sc-if value="{{ hasQ }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ clearQ }}" title="지우기" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:0;border-radius:9999px;background:var(--gray-100);color:var(--gray-600);cursor:pointer;font-size:16px;line-height:1" style-hover="background:var(--gray-200)">×</button>
+          </sc-if>
+        </div>
+        <span style="font-size:15px;color:var(--gray-400);white-space:nowrap">단축키 <kbd style="font-family:inherit;border:1px solid var(--gray-300);border-radius:4px;padding:1px 6px;background:var(--gray-0);color:var(--gray-600)">/</kbd> 검색 · <kbd style="font-family:inherit;border:1px solid var(--gray-300);border-radius:4px;padding:1px 6px;background:var(--gray-0);color:var(--gray-600)">Esc</kbd> 해제</span>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:16px">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <span style="flex:0 0 40px;font-size:15px;color:var(--gray-500);padding-top:7px">분류</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">
+            <sc-for list="{{ subs }}" as="c" hint-placeholder-count="12">
+              <button onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.label }} <span style="opacity:.6;font-variant-numeric:tabular-nums">{{ c.count }}</span></button>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main style="flex:1;width:100%;max-width:1200px;margin:0 auto;padding:16px 24px 64px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <div style="font-size:15px;color:var(--gray-600)"><b style="color:var(--green-700);font-size:18px">{{ total }}</b>건 <span style="color:var(--gray-500)">{{ countNote }}</span></div>
+      <div style="margin-left:auto;display:flex;gap:6px" data-noprint="1">
+        <x-import component-from-global-scope="UOUDesignSystem_08270e.Button" variant="outline" size="sm" on-click="{{ expandAll }}" hint-size="auto,36px">모두 펼치기</x-import>
+        <x-import component-from-global-scope="UOUDesignSystem_08270e.Button" variant="outline" size="sm" on-click="{{ collapseAll }}" hint-size="auto,36px">모두 접기</x-import>
+        <x-import component-from-global-scope="UOUDesignSystem_08270e.Button" variant="secondary" size="sm" on-click="{{ printAll }}" hint-size="auto,36px">인쇄</x-import>
+      </div>
+    </div>
+
+    <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:72px 20px;color:var(--gray-500);font-size:16px;line-height:1.7">검색 결과가 없습니다.<br>다른 키워드로 검색해 보세요.</div>
+    </sc-if>
+
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <sc-for list="{{ hits }}" as="d" hint-placeholder-count="6">
+        <div data-card="1" style="{{ d.cardStyle }}">
+          <div onClick="{{ d.toggle }}" style="{{ d.rowStyle }}">
+<div style="flex:0 0 44px;font-size:15px;font-weight:700;color:var(--gray-400);padding-top:3px;font-variant-numeric:tabular-nums">{{ d.num }}</div>
+                        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                <sc-if value="{{ d.showGrp }}" hint-placeholder-val="{{ false }}">
+                  <sc-if value="{{ d.isJs }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="UOUDesignSystem_08270e.Badge" variant="accent" hint-size="auto,20px">{{ d.grp }}</x-import></sc-if>
+                  <sc-if value="{{ d.isSs }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="UOUDesignSystem_08270e.Badge" variant="default" hint-size="auto,20px">{{ d.grp }}</x-import></sc-if>
+                </sc-if>
+                <sc-if value="{{ d.showCat }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ d.pickCat }}" title="이 분류만 보기" style="border:0;background:transparent;padding:0;font-size:15px;color:var(--gray-500);cursor:pointer;font-family:inherit" style-hover="color:var(--green-700)">{{ d.cat }}</button>
+                  <span style="font-size:15px;color:var(--gray-400)">›</span>
+                </sc-if>
+                <sc-if value="{{ d.showSub }}" hint-placeholder-val="{{ true }}"><button onClick="{{ d.pickSub }}" title="이 분류만 보기" style="border:0;background:transparent;padding:0;font-size:15px;font-weight:500;color:var(--gray-600);cursor:pointer;font-family:inherit;text-decoration:underline dotted;text-underline-offset:3px" style-hover="color:var(--green-700)">{{ d.sub }}</button></sc-if>
+              </div>
+              <div style="font-size:17px;font-weight:500;color:var(--gray-900);letter-spacing:-0.2px;line-height:1.5;text-wrap:pretty">
+                <sc-for list="{{ d.qParts }}" as="p" hint-placeholder-count="1"><sc-if value="{{ p.m }}" hint-placeholder-val="{{ false }}"><mark style="background:var(--yellow-100);color:inherit;padding:0 1px;border-radius:2px">{{ p.t }}</mark></sc-if><sc-if value="{{ p.n }}" hint-placeholder-val="{{ true }}"><span>{{ p.t }}</span></sc-if></sc-for>
+              </div>
+              <sc-if value="{{ d.hasSnip }}" hint-placeholder-val="{{ false }}">
+                <div style="font-size:15px;color:var(--gray-600);line-height:1.6;padding-left:10px;border-left:2px solid var(--gray-200)">
+                  <sc-for list="{{ d.snipParts }}" as="p" hint-placeholder-count="1"><sc-if value="{{ p.m }}" hint-placeholder-val="{{ false }}"><mark style="background:var(--yellow-100);color:inherit;padding:0 1px;border-radius:2px">{{ p.t }}</mark></sc-if><sc-if value="{{ p.n }}" hint-placeholder-val="{{ true }}"><span>{{ p.t }}</span></sc-if></sc-for>
+                </div>
+              </sc-if>
+            </div>
+            <div style="{{ d.arrowStyle }}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+            </div>
+          </div>
+          <sc-if value="{{ d.open }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:0 20px 18px 76px;border-top:1px solid var(--gray-100)">
+              <div style="font-size:15px;color:var(--gray-800);white-space:pre-wrap;line-height:1.8;padding-top:14px"><sc-for list="{{ d.aParts }}" as="p" hint-placeholder-count="1"><sc-if value="{{ p.m }}" hint-placeholder-val="{{ false }}"><mark style="background:var(--yellow-100);color:inherit;padding:0 1px;border-radius:2px">{{ p.t }}</mark></sc-if><sc-if value="{{ p.n }}" hint-placeholder-val="{{ true }}"><span>{{ p.t }}</span></sc-if></sc-for></div>
+              <div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--gray-200);display:flex;flex-wrap:wrap;gap:8px 20px;font-size:15px;color:var(--gray-600);align-items:center">
+                <span style="display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green-600)"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><span style="font-weight:700;color:var(--green-700)">{{ d.tel }}</span></span>
+                <sc-if value="{{ showSource }}" hint-placeholder-val="{{ true }}"><span style="color:var(--gray-500)">근거 {{ d.src }}</span></sc-if>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <sc-if value="{{ hasOthers }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;align-items:center;gap:12px;margin:24px 0 12px;font-size:15px;color:var(--gray-500);font-weight:500">
+        <span style="flex:1;height:1px;background:var(--gray-200)"></span>
+        <span>{{ splitNote }}</span>
+        <span style="flex:1;height:1px;background:var(--gray-200)"></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ others }}" as="d" hint-placeholder-count="2">
+          <div data-card="1" style="{{ d.cardStyle }}">
+            <div onClick="{{ d.toggle }}" style="{{ d.rowStyle }}">
+<div style="flex:0 0 44px;font-size:15px;font-weight:700;color:var(--gray-400);padding-top:3px;font-variant-numeric:tabular-nums">{{ d.num }}</div>
+                            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+                <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                  <sc-if value="{{ d.showGrp }}" hint-placeholder-val="{{ false }}">
+                    <sc-if value="{{ d.isJs }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="UOUDesignSystem_08270e.Badge" variant="accent" hint-size="auto,20px">{{ d.grp }}</x-import></sc-if>
+                    <sc-if value="{{ d.isSs }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="UOUDesignSystem_08270e.Badge" variant="default" hint-size="auto,20px">{{ d.grp }}</x-import></sc-if>
+                  </sc-if>
+                  <sc-if value="{{ d.showCat }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ d.pickCat }}" title="이 분류만 보기" style="border:0;background:transparent;padding:0;font-size:15px;color:var(--gray-500);cursor:pointer;font-family:inherit" style-hover="color:var(--green-700)">{{ d.cat }}</button>
+                    <span style="font-size:15px;color:var(--gray-400)">›</span>
+                  </sc-if>
+                  <sc-if value="{{ d.showSub }}" hint-placeholder-val="{{ true }}"><button onClick="{{ d.pickSub }}" title="이 분류만 보기" style="border:0;background:transparent;padding:0;font-size:15px;font-weight:500;color:var(--gray-600);cursor:pointer;font-family:inherit;text-decoration:underline dotted;text-underline-offset:3px" style-hover="color:var(--green-700)">{{ d.sub }}</button></sc-if>
+                </div>
+                <div style="font-size:17px;font-weight:500;color:var(--gray-900);letter-spacing:-0.2px;line-height:1.5;text-wrap:pretty">
+                  <sc-for list="{{ d.qParts }}" as="p" hint-placeholder-count="1"><sc-if value="{{ p.m }}" hint-placeholder-val="{{ false }}"><mark style="background:var(--yellow-100);color:inherit;padding:0 1px;border-radius:2px">{{ p.t }}</mark></sc-if><sc-if value="{{ p.n }}" hint-placeholder-val="{{ true }}"><span>{{ p.t }}</span></sc-if></sc-for>
+                </div>
+                <sc-if value="{{ d.hasSnip }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:15px;color:var(--gray-600);line-height:1.6;padding-left:10px;border-left:2px solid var(--gray-200)">
+                    <sc-for list="{{ d.snipParts }}" as="p" hint-placeholder-count="1"><sc-if value="{{ p.m }}" hint-placeholder-val="{{ false }}"><mark style="background:var(--yellow-100);color:inherit;padding:0 1px;border-radius:2px">{{ p.t }}</mark></sc-if><sc-if value="{{ p.n }}" hint-placeholder-val="{{ true }}"><span>{{ p.t }}</span></sc-if></sc-for>
+                  </div>
+                </sc-if>
+              </div>
+              <div style="{{ d.arrowStyle }}">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+              </div>
+            </div>
+            <sc-if value="{{ d.open }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:0 20px 18px 76px;border-top:1px solid var(--gray-100)">
+                <div style="font-size:15px;color:var(--gray-800);white-space:pre-wrap;line-height:1.8;padding-top:14px"><sc-for list="{{ d.aParts }}" as="p" hint-placeholder-count="1"><sc-if value="{{ p.m }}" hint-placeholder-val="{{ false }}"><mark style="background:var(--yellow-100);color:inherit;padding:0 1px;border-radius:2px">{{ p.t }}</mark></sc-if><sc-if value="{{ p.n }}" hint-placeholder-val="{{ true }}"><span>{{ p.t }}</span></sc-if></sc-for></div>
+                <div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--gray-200);display:flex;flex-wrap:wrap;gap:8px 20px;font-size:15px;color:var(--gray-600);align-items:center">
+                  <span style="display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green-600)"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg><span style="font-weight:700;color:var(--green-700)">{{ d.tel }}</span></span>
+                  <sc-if value="{{ showSource }}" hint-placeholder-val="{{ true }}"><span style="color:var(--gray-500)">근거 {{ d.src }}</span></sc-if>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </main>
+
+  <footer style="border-top:1px solid var(--gray-200);background:var(--gray-50)">
+    <div style="max-width:1200px;margin:0 auto;padding:20px 24px 40px;font-size:15px;color:var(--gray-500);line-height:1.8;display:flex;flex-direction:column;gap:2px">
+      <span>· 본 자료는 입학처 온라인 QnA 누적 데이터를 주제별로 통합·표준화한 뒤, 2027학년도 수시 모집요강과 대조하여 갱신한 상담 참고용 자료입니다.</span>
+      <span>· 「정시」 항목은 2027학년도 정시 모집요강 발표 전 자료로, 수능 반영영역·가산점·모집인원 등은 정시 모집요강 확정 후 반드시 재확인하시기 바랍니다.</span>
+      <span>· 전형 세부 수치·일정은 반드시 해당 학년도 모집요강 및 입학처 홈페이지(<a href="https://iphak.ulsan.ac.kr" target="_blank" rel="noreferrer">iphak.ulsan.ac.kr</a>)를 최종 확인하시기 바랍니다.</span>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;defaultOpen&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;목록&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;comfortable&quot;,&quot;compact&quot;],&quot;default&quot;:&quot;comfortable&quot;,&quot;tsType&quot;:&quot;'comfortable' | 'compact'&quot;,&quot;section&quot;:&quot;목록&quot;},&quot;showSource&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;목록&quot;}}">
+class Component extends DCLogic {
+  state = { data: [], q: '', grp: '전체', cat: '전체', sub: '전체', open: {} };
+  searchRef = React.createRef();
+
+  componentDidMount() {
+    import(new URL('./faq-data.js', location.href).href).then(m => this.setState({ data: m.DATA }));
+    this.onKey = e => {
+      const inp = this.searchRef.current && this.searchRef.current.querySelector('input');
+      if (!inp) return;
+      if (e.key === '/' && document.activeElement !== inp) { e.preventDefault(); inp.focus(); }
+      if (e.key === 'Escape') inp.blur();
+    };
+    document.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { document.removeEventListener('keydown', this.onKey); }
+
+  toks() { const q = this.state.q.trim().toLowerCase(); return q ? q.split(/\s+/).filter(Boolean) : []; }
+  matchQ(d, T) { if (!T.length) return true; const h = (d.q + ' ' + d.a + ' ' + d.sub + ' ' + d.cat + ' ' + d.grp + ' ' + d.tel).toLowerCase(); return T.every(t => h.includes(t)); }
+  hitTitle(d, T) { if (!T.length) return true; const t = d.q.toLowerCase(); return T.every(x => t.includes(x)); }
+
+  parts(s, T) {
+    if (!T.length || !s) return [{ t: s, m: false, n: true }];
+    const re = new RegExp('(' + T.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'gi');
+    return s.split(re).filter(x => x !== '').map(x => { const m = T.includes(x.toLowerCase()); return { t: x, m, n: !m }; });
+  }
+
+  snippet(d, T) {
+    if (!T.length) return '';
+    const lines = d.a.split('\n').map(s => s.trim()).filter(Boolean);
+    let ln = lines.find(l => { const x = l.toLowerCase(); return T.every(t => x.includes(t)); });
+    if (!ln) ln = lines.find(l => { const x = l.toLowerCase(); return T.some(t => x.includes(t)); });
+    if (!ln) {
+      const w = [];
+      if (T.some(t => d.sub.toLowerCase().includes(t))) w.push('소분류 「' + d.sub + '」');
+      if (T.some(t => d.cat.toLowerCase().includes(t))) w.push('분류 「' + d.cat + '」');
+      if (T.some(t => d.tel.toLowerCase().includes(t))) w.push('문의처');
+      return w.length ? '검색어가 ' + w.join(' · ') + '에 해당하여 표시됨' : '';
+    }
+    const low = ln.toLowerCase(); let i = -1;
+    T.forEach(t => { const p = low.indexOf(t); if (p >= 0 && (i < 0 || p < i)) i = p; });
+    if (i < 0) i = 0;
+    let s = ln, head = '', tail = '';
+    if (ln.length > 96) { const st = Math.max(0, i - 30); s = ln.slice(st, st + 96); if (st > 0) head = '… '; if (st + 96 < ln.length) tail = ' …'; }
+    return head + s + tail;
+  }
+
+  chipStyle(on, zero, kind) {
+    const base = 'font-family:inherit;font-size:15px;line-height:1;padding:9px 14px;border-radius:9999px;cursor:pointer;white-space:nowrap;transition:background-color .13s ease,color .13s ease,border-color .13s ease;';
+    let s;
+    if (on) s = kind === 'grp' ? 'background:var(--green-500);color:#fff;border:1px solid var(--green-500);font-weight:700;' : 'background:var(--green-50);color:var(--green-700);border:1px solid var(--green-300);font-weight:700;';
+    else s = 'background:var(--gray-0);color:var(--gray-700);border:1px solid var(--gray-300);font-weight:500;';
+    return base + s + (zero && !on ? 'opacity:.4;' : '');
+  }
+
+  toggleKey(k) { this.setState(s => ({ open: { ...s.open, [k]: !(s.open[k] ?? (this.props.defaultOpen ?? true)) } })); }
+
+  card(d, T, withSnip, compact) {
+    const key = d.grp + d.n, open = this.state.open[key] ?? (this.props.defaultOpen ?? true);
+    const sn = withSnip ? this.snippet(d, T) : '';
+    return {
+      key, num: (d.grp === '정시' ? '정' : '수') + d.n, grp: d.grp, isJs: d.grp === '정시', isSs: d.grp !== '정시',
+      cat: d.cat, sub: d.sub, tel: d.tel, src: d.src, open,
+      showGrp: false, showCat: false, showSub: this.state.sub === '전체',
+      pickCat: e => { e.stopPropagation(); this.setState({ grp: d.grp, cat: d.cat, sub: '전체' }); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+      qParts: this.parts(d.q, T), aParts: this.parts(d.a, T), hasSnip: !!sn, snipParts: this.parts(sn, T),
+      cardStyle: 'background:var(--gray-0);border:1px solid ' + (open ? 'var(--green-300)' : 'var(--gray-200)') + ';border-radius:12px;overflow:hidden;box-shadow:' + (open ? 'var(--shadow-md)' : 'none') + ';transition:box-shadow .13s ease,border-color .13s ease;',
+      rowStyle: 'display:flex;align-items:flex-start;gap:12px;cursor:pointer;padding:' + (compact ? '10px 16px' : '14px 20px') + ';',
+      arrowStyle: 'flex:0 0 auto;color:var(--gray-400);padding-top:4px;transition:transform .13s ease;transform:rotate(' + (open ? 90 : 0) + 'deg);',
+      toggle: () => this.toggleKey(key),
+      pickSub: e => { e.stopPropagation(); this.setState({ sub: d.sub }); window.scrollTo({ top: 0, behavior: 'smooth' }); },
+    };
+  }
+
+  renderVals() {
+    const { data, q, grp, cat, sub } = this.state;
+    const T = this.toks();
+    const compact = (this.props.density ?? 'comfortable') === 'compact';
+    const inGrp = () => true;
+    const inCat = () => true;
+
+    const poolG = data.filter(d => this.matchQ(d, T));
+    const groups = ['전체', ...new Set(data.map(d => d.grp))].map(g => {
+      const c = g === '전체' ? poolG.length : poolG.filter(d => d.grp === g).length;
+      return { label: g, count: c, style: this.chipStyle(g === grp, c === 0, 'grp'), pick: () => this.setState({ grp: g, cat: '전체', sub: '전체' }) };
+    });
+    const allC = data.filter(inGrp), poolC = allC.filter(d => this.matchQ(d, T));
+    const cats = ['전체', ...new Set(allC.map(d => d.cat))].map(c => {
+      const n = c === '전체' ? poolC.length : poolC.filter(d => d.cat === c).length;
+      return { label: c, count: n, style: this.chipStyle(c === cat, n === 0, c === '전체' ? 'grp' : 'cat'), pick: () => this.setState({ cat: c, sub: '전체' }) };
+    });
+    const poolS = data.filter(d => this.matchQ(d, T));
+    const subNames = [...new Set(data.map(d => d.sub))];
+    const showSubs = true;
+    const subs = ['전체', ...subNames].map(s => {
+      const n = s === '전체' ? poolS.length : poolS.filter(d => d.sub === s).length;
+      return { label: s, count: n, style: this.chipStyle(s === sub, n === 0, s === '전체' ? 'grp' : 'cat'), pick: () => this.setState({ sub: s }) };
+    });
+
+    const res = data.filter(d => inGrp(d) && inCat(d) && (sub === '전체' || d.sub === sub) && this.matchQ(d, T));
+    const A = res.filter(d => this.hitTitle(d, T)), B = res.filter(d => !this.hitTitle(d, T));
+    const setAll = v => { const o = {}; res.forEach(d => { o[d.grp + d.n] = v; }); this.setState(s => ({ open: { ...s.open, ...o } })); };
+
+    return {
+      q, hasQ: !!q, searchRef: this.searchRef,
+      onQ: e => this.setState({ q: e.target.value }),
+      clearQ: () => { this.setState({ q: '' }); const i = this.searchRef.current && this.searchRef.current.querySelector('input'); if (i) i.focus(); },
+      groups, cats, subs, showSubs,
+      total: res.length,
+      countNote: B.length ? '(질문에 있음 ' + A.length + ' · 답변·분류에만 있음 ' + B.length + ')' : '',
+      empty: data.length > 0 && !res.length,
+      hits: A.map(d => this.card(d, T, false, compact)),
+      others: B.map(d => this.card(d, T, true, compact)),
+      hasOthers: B.length > 0,
+      splitNote: '아래 ' + B.length + '건은 질문에는 「' + q.trim() + '」가 없고, 답변 본문 또는 분류명에 들어 있는 문항입니다',
+      showSource: this.props.showSource ?? true,
+      expandAll: () => setAll(true),
+      collapseAll: () => setAll(false),
+      printAll: () => { setAll(true); setTimeout(() => window.print(), 300); },
+    };
+  }
+}
+</script>
+</body>
+</html>
