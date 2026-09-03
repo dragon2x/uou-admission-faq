@@ -20,6 +20,7 @@
   <style>
     body{margin:0;background:var(--gray-0);color:var(--gray-800);font-family:var(--font-sans,'Pretendard',sans-serif);-webkit-font-smoothing:antialiased}
     a{color:var(--link-color)}a:hover{color:var(--link-hover)}
+    [data-search] input{padding-left:44px !important}
     @media print{[data-noprint]{display:none !important}[data-sticky]{position:static !important}[data-card]{break-inside:avoid}}
   </style>
 </helmet>
@@ -41,13 +42,13 @@
   <section data-noprint="1" style="background:var(--gray-50);border-bottom:1px solid var(--gray-200)">
     <div style="max-width:1200px;margin:0 auto;padding:20px 24px 0;display:flex;flex-direction:column;gap:14px">
       <div ref="{{ searchRef }}" style="display:flex;gap:8px;align-items:center">
-        <div style="flex:1;position:relative">
+        <div data-search="1" style="flex:1;position:relative">
+          <span aria-hidden="true" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:17px;line-height:1;pointer-events:none;opacity:.55;z-index:1">&#128269;</span>
           <x-import component-from-global-scope="UOUDesignSystem_08270e.Input" size="lg" value="{{ q }}" on-change="{{ onQ }}" placeholder="키워드로 검색 (예: 진로선택, 수능최저, 검정고시, 등록취소, 기숙사, 이월)" hint-size="100%,52px"></x-import>
           <sc-if value="{{ hasQ }}" hint-placeholder-val="{{ false }}">
             <button onClick="{{ clearQ }}" title="지우기" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);width:28px;height:28px;border:0;border-radius:9999px;background:var(--gray-100);color:var(--gray-600);cursor:pointer;font-size:16px;line-height:1" style-hover="background:var(--gray-200)">×</button>
           </sc-if>
         </div>
-        <span style="font-size:15px;color:var(--gray-400);white-space:nowrap">단축키 <kbd style="font-family:inherit;border:1px solid var(--gray-300);border-radius:4px;padding:1px 6px;background:var(--gray-0);color:var(--gray-600)">/</kbd> 검색 · <kbd style="font-family:inherit;border:1px solid var(--gray-300);border-radius:4px;padding:1px 6px;background:var(--gray-0);color:var(--gray-600)">Esc</kbd> 해제</span>
       </div>
 
       <div style="display:flex;flex-direction:column;gap:10px;padding-bottom:16px">
